@@ -1,25 +1,23 @@
 import Phaser from "phaser";
 import FpsText from "../objects/fpsText";
+import MainSceneData from "./mainScene";
 
-export interface MainSceneData {
-    score: number;
-}
-
-export default class MainScene extends Phaser.Scene {
+export class Scene1 extends Phaser.Scene {
     fpsText: FpsText;
     score: number;
-
     constructor() {
-        super({ key: "MainScene" });
+        super({ key: "scene1" });
     }
-
+    init(data: MainSceneData) {
+        this.score = data.score;
+    }
     preload() {
-        this.load.image("sky", "assets/sky.png");
-        this.load.image("button", "assets/button.png");
+        this.load.image("dog", "assets/dog.png");
     }
-    create() {
-        this.fpsText = new FpsText(this);
 
+    create() {
+        this.add.image(400, 300, "sky");
+        this.fpsText = new FpsText(this);
         const message = `Phaser v${Phaser.VERSION}`;
         this.add
             .text(this.cameras.main.width - 15, 15, message, {
@@ -29,8 +27,7 @@ export default class MainScene extends Phaser.Scene {
             .setOrigin(1, 0);
 
         const button = this.add.image(400, 300, "button").setInteractive();
-        this.score = 0;
-        let scoreText = this.add.text(50, 50, "Score: 0", {
+        let scoreText = this.add.text(50, 50, "Score: " + this.score, {
             fontSize: "30px",
             color: "black",
         });
@@ -39,13 +36,9 @@ export default class MainScene extends Phaser.Scene {
             this.score++;
             scoreText.setText("Score: " + this.score);
 
-            if (this.score === 5) {
-                this.scene.start("scene1", { score: this.score });
+            if (this.score === 7) {
+                this.scene.start("scene2", { score: this.score });
             }
         });
-    }
-
-    update() {
-        this.fpsText.update();
     }
 }
